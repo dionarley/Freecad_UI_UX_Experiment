@@ -24,6 +24,35 @@ except ImportError:  # pragma: no cover
     QT_BINDING = "PySide2"
 
 
+def make_app_icon(size=64):
+    """Cria um ícone programático (sem arquivo externo) para a janela e botões."""
+    pixmap = QtGui.QPixmap(size, size)
+    pixmap.fill(QtCore.Qt.transparent)
+
+    painter = QtGui.QPainter(pixmap)
+    painter.setRenderHint(QtGui.QPainter.Antialiasing)
+
+    # Fundo: círculo azul (cores do FreeCAD aproximadas)
+    painter.setBrush(QtGui.QColor("#007acc"))  # azul FreeCAD
+    painter.setPen(QtCore.Qt.NoPen)
+    painter.drawEllipse(4, 4, size - 8, size - 8)
+
+    # Letra "F" branca no centro
+    painter.setPen(QtGui.QPen(QtCore.Qt.white, 6))
+    font = painter.font()
+    font.setPointSize(int(size * 0.45))
+    font.setBold(True)
+    painter.setFont(font)
+    painter.drawText(
+        QtCore.QRectF(0, 0, size, size),
+        QtCore.Qt.AlignCenter,
+        "F",
+    )
+    painter.end()
+
+    return QtGui.QIcon(pixmap)
+
+
 class TestWindow(QtWidgets.QMainWindow):
     """Janela principal com um botão de teste."""
 
@@ -31,6 +60,7 @@ class TestWindow(QtWidgets.QMainWindow):
         super().__init__(parent)
         self.freeCAD_mode = freeCAD_mode
         self.setWindowTitle(f"FreeCAD UI-LAB — Teste de Janela ({QT_BINDING})")
+        self.setWindowIcon(make_app_icon())
         self.resize(400, 200)
 
         central = QtWidgets.QWidget()
@@ -47,9 +77,10 @@ class TestWindow(QtWidgets.QMainWindow):
         title.setFont(font)
         layout.addWidget(title)
 
-        # Botão de teste
-        self.btn_test = QtWidgets.QPushButton("Executar Teste")
+        # Botão de teste (com ícone)
+        self.btn_test = QtWidgets.QPushButton(make_app_icon(24), "Executar Teste")
         self.btn_test.setMinimumHeight(40)
+        self.btn_test.setIconSize(QtCore.QSize(20, 20))
         self.btn_test.clicked.connect(self.on_test_clicked)
         layout.addWidget(self.btn_test)
 
