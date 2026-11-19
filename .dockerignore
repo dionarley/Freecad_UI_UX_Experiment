@@ -1,0 +1,9 @@
+.git/
+__pycache__/
+*.pyc
+.venv/
+.venv*/
+.DS_Store
+.idea/
+.vscode/
+uv.lock
