@@ -417,6 +417,42 @@ Documentação detalhada em `docs/`:
 | `docs/testes.md` | Como rodar os testes (PT-BR) |
 | `docs/arquitetura.md` | Arquitetura e dependências (PT-BR/Inglês) |
 
+## Troubleshooting / Solução de problemas
+
+### "PySide6 ou PySide2 não instalado. Rode: uv sync --extra window"
+
+Este erro acontece quando você tenta abrir a janela (`window_test.py` ou
+`ui_lab_app.py`) sem ter o PySide6 instalado. Corrija com:
+
+```sh
+uv sync --extra window
+uv run python ui_lab_app.py   # ou window_test.py
+```
+
+Ou use o script:
+
+```sh
+./run.sh app
+```
+
+### PySide6 instalado mas não pode ser importado (erro `libGL.so.1`)
+
+Se você instalou o PySide6 mas recebe um erro como
+`ImportError: libGL.so.1: cannot open shared object file`, o seu sistema
+está faltando bibliotecas OpenGL. Instale-as:
+
+- **Debian/Ubuntu:** `sudo apt-get install libgl1-mesa-glx`
+- **Fedora:** `sudo dnf install mesa-libGL`
+- **Arch:** `sudo pacman -S libgl`
+- **NixOS:** adicione `mesa` ou `libgl` ao seu `environment.systemPackages`
+
+Após instalar, rode novamente:
+
+```sh
+uv sync --extra window
+./run.sh app
+```
+
 ## License / Licença
 
 All content in this repository (code, documentation, and files) is licensed
