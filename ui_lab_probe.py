@@ -1,3 +1,6 @@
+# This file is part of the FreeCAD UI/UX Experiment.
+# It is licensed under the GNU LGPL v3. See LICENSE-CODE for details.
+
 try:
     import FreeCAD as App
     import FreeCADGui as Gui

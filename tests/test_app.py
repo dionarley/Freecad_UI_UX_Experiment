@@ -1,3 +1,6 @@
+# This file is part of the FreeCAD UI/UX Experiment.
+# It is licensed under the GNU LGPL v3. See LICENSE-CODE for details.
+
 """Testes do app real de UI/UX (ui_lab_app.py).
 
 Roda apenas quando PySide6/PySide2 está instalado e importável. Fora disso,

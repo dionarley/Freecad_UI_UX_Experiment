@@ -1,3 +1,6 @@
+# This file is part of the FreeCAD UI/UX Experiment.
+# It is licensed under the GNU LGPL v3. See LICENSE-CODE for details.
+
 """Teste mínimo do ui_lab_probe.py.
 
 Não requer FreeCAD instalado. Valida apenas que o módulo é importável fora do

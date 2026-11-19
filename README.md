@@ -64,7 +64,7 @@ freecad-ui-ux-experiment/
 ├── .mise.toml          # Python 3.11 via mise (optional)
 ├── LICENSE             # CC BY 4.0
 ├── README.md
-├── index.html          # bilingual project overview (En/PT-BR)
+├── docs/index.html          # bilingual project overview (En/PT-BR)
 ├── USO.md              # usage example inside FreeCAD (PT-BR)
 ├── USO_EN.md           # usage example inside FreeCAD (English)
 ├── pyproject.toml      # uv project + pytest (dev dependency)
@@ -102,7 +102,7 @@ freecad-ui-ux-experiment/
 ├── .mise.toml          # Python 3.11 via mise (opcional)
 ├── LICENSE             # CC BY 4.0
 ├── README.md
-├── index.html          # visão geral bilíngue do projeto (En/PT-BR)
+├── docs/index.html          # visão geral bilíngue do projeto (En/PT-BR)
 ├── USO.md              # exemplo de uso dentro do FreeCAD (PT-BR)
 ├── USO_EN.md           # exemplo de uso dentro do FreeCAD (Inglês)
 ├── pyproject.toml      # projeto uv + pytest (dependência de dev)
@@ -453,20 +453,105 @@ uv sync --extra window
 ./run.sh app
 ```
 
-## License / Licença
+## Licenses / Licenças
 
-All content in this repository (code, documentation, and files) is licensed
-under **Creative Commons Attribution 4.0 International (CC BY 4.0)**. See the
-`LICENSE` file for the full text.
+### Código (Python) — GNU LGPL v3
 
-CC BY 4.0 summary: you are free to share and adapt the material, even for
-commercial purposes, as long as you give appropriate credit, provide a link to
-the license, and indicate if changes were made.
+Todos os arquivos Python (`ui_lab_probe.py`, `ui_lab_app.py`, `window_test.py`,
+`tests/`) estão licenciados sob a **GNU Lesser General Public License v3.0**.
+Veja o arquivo `LICENSE-CODE` para o texto completo.
 
-Todo o conteúdo deste repositório (código, documentação e arquivos) está
-licenciado sob **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
-Veja o arquivo `LICENSE` para o texto completo.
+Isso é compatível com o FreeCAD (que usa LGPL), permitindo que o código seja
+integrado ou vinculado ao FreeCAD sem restrições adicionais.
 
-Resumo da CC BY 4.0: você é livre para compartilhar e adaptar o material, mesmo
-para fins comerciais, desde que dê o crédito apropriado, forneça um link para a
-licença e indique se foram feitas alterações.
+LGPL v3 summary: você pode usar, modificar e distribuir o código, inclusive em
+produtos proprietários, desde que as modificações na biblioteca (ou partes
+cobertas pela LGPL) sejam disponibilizadas sob a mesma licença.
+
+### Documentação — CC BY 4.0
+
+Toda a documentação (`README.md`, `docs/`, `docs/index.html`, `USO.md`,
+`USO_EN.md`) está licenciada sob **Creative Commons Attribution 4.0
+International (CC BY 4.0)**. Veja o arquivo `LICENSE` para o texto completo.
+
+CC BY 4.0 summary: você é livre para compartilhar e adaptar a documentação,
+mesmo para fins comerciais, desde que dê o crédito apropriado, forneça um link
+para a licença e indique se foram feitas alterações.
+
+## Estrutura de arquivos atualizada
+
+```
+freecad-ui-ux-experiment/
+├── .gitignore
+├── .mise.toml          # Python 3.11 via mise (optional)
+├── LICENSE             # CC BY 4.0 (documentação)
+├── LICENSE-CODE        # GNU LGPL v3 (código Python)
+├── README.md
+├── pyproject.toml      # projeto uv + pytest (dependência de dev)
+├── uv.lock             # dependências travadas
+├── ui_lab_probe.py     # UI laboratory script (probe) — LGPL
+├── ui_lab_app.py       # real UI/UX application — LGPL
+├── window_test.py      # test window with button — LGPL
+├── Dockerfile          # minimal container for tests
+├── .dockerignore
+├── run.sh              # execution script (sync, test, window, app, clean)
+├── docs/               # detailed documentation (CC BY 4.0)
+│   ├── docs/index.html      # bilingual project overview (En/PT-BR)
+│   ├── overview.md     # project overview (English)
+│   ├── visao-geral.md  # visão geral do projeto (PT-BR)
+│   ├── installation.md # installation (English)
+│   ├── instalacao.md   # instalação (PT-BR)
+│   ├── use-probe.md    # how to use ui_lab_probe.py (English)
+│   ├── uso-probe.md    # como usar o ui_lab_probe.py (PT-BR)
+│   ├── use-app.md      # how to use ui_lab_app.py (English)
+│   ├── uso-app.md      # como usar o ui_lab_app.py (PT-BR)
+│   ├── tests.md        # how to run tests (English)
+│   ├── testes.md       # como rodar os testes (PT-BR)
+│   └── arquitetura.md  # architecture and dependencies (PT-BR/English)
+├── USO.md              # exemplo de uso dentro do FreeCAD (PT-BR)
+├── USO_EN.md           # exemplo de uso dentro do FreeCAD (English)
+└── tests/
+    ├── test_ui_lab.py              # minimal test (no FreeCAD or PySide needed) — LGPL
+    ├── test_window_quick.py        # quick window/dock test (needs PySide6) — LGPL
+    ├── test_app.py                 # app test (needs PySide6) — LGPL
+    └── test_dependencies.py        # dependency check (needs PySide6) — LGPL
+```
+
+## Estrutura do repositório (Português)
+
+```
+freecad-ui-ux-experiment/
+├── .gitignore
+├── .mise.toml          # Python 3.11 via mise (opcional)
+├── LICENSE             # CC BY 4.0 (documentação)
+├── LICENSE-CODE        # GNU LGPL v3 (código Python)
+├── README.md
+├── pyproject.toml      # projeto uv + pytest (dependência de dev)
+├── uv.lock             # dependências travadas
+├── ui_lab_probe.py     # script do laboratório de UI (probe) — LGPL
+├── ui_lab_app.py       # aplicação real de UI/UX — LGPL
+├── window_test.py      # janela de teste com botão — LGPL
+├── Dockerfile          # container mínimo para testes
+├── .dockerignore
+├── run.sh              # script de execução (sync, test, window, app, clean)
+├── docs/               # documentação detalhada (CC BY 4.0)
+│   ├── docs/index.html      # visão geral bilíngue do projeto (En/PT-BR)
+│   ├── overview.md     # visão geral do projeto (Inglês)
+│   ├── visao-geral.md  # visão geral do projeto (PT-BR)
+│   ├── installation.md # instalação (Inglês)
+│   ├── instalacao.md   # instalação (PT-BR)
+│   ├── use-probe.md    # como usar o ui_lab_probe.py (Inglês)
+│   ├── uso-probe.md    # como usar o ui_lab_probe.py (PT-BR)
+│   ├── use-app.md      # como usar o ui_lab_app.py (Inglês)
+│   ├── uso-app.md      # como usar o ui_lab_app.py (PT-BR)
+│   ├── tests.md        # como rodar os testes (Inglês)
+│   ├── testes.md       # como rodar os testes (PT-BR)
+│   └── arquitetura.md  # arquitetura e dependências (PT-BR/Inglês)
+├── USO.md              # exemplo de uso dentro do FreeCAD (PT-BR)
+├── USO_EN.md           # exemplo de uso dentro do FreeCAD (Inglês)
+└── tests/
+    ├── test_ui_lab.py              # teste mínimo (não precisa de FreeCAD nem PySide) — LGPL
+    ├── test_window_quick.py        # teste rápido de janela/dock (precisa de PySide6) — LGPL
+    ├── test_app.py                 # teste do app (precisa de PySide6) — LGPL
+    └── test_dependencies.py        # verificação de dependências (precisa de PySide6) — LGPL
+```

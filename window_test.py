@@ -1,3 +1,6 @@
+# This file is part of the FreeCAD UI/UX Experiment.
+# It is licensed under the GNU LGPL v3. See LICENSE-CODE for details.
+
 """Janela de teste com botão, compatível com o FreeCAD.
 
 Este arquivo é autônomo e **não modifica** `ui_lab_probe.py` nem qualquer outro

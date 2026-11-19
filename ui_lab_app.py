@@ -1,3 +1,6 @@
+# This file is part of the FreeCAD UI/UX Experiment.
+# It is licensed under the GNU LGPL v3. See LICENSE-CODE for details.
+
 """FreeCAD UI-LAB — Aplicação real de laboratório de UI/UX.
 
 Este arquivo é autônomo e **não modifica** `ui_lab_probe.py` nem qualquer outro
