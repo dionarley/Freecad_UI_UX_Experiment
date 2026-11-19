@@ -31,7 +31,8 @@ Freecad_UI_UX_Experiment/
 ├── uv.lock             # dependências travadas
 ├── ui_lab_probe.py     # script do laboratório de UI/UX
 └── tests/
-    └── test_ui_lab.py  # teste mínimo (não precisa de FreeCAD)
+    ├── test_ui_lab.py  # teste mínimo (não precisa de FreeCAD nem PySide)
+    └── test_window_quick.py  # teste rápido de janela/dock (precisa de PySide6)
 ```
 
 ## Requisitos
@@ -39,6 +40,7 @@ Freecad_UI_UX_Experiment/
 - Python >= 3.10 (via [mise](https://mise.jdx.dev/) ou [uv](https://github.com/astral-sh/uv))
 - FreeCAD (para usar o script dentro da aplicação)
 - pytest (somente para rodar os testes)
+- PySide6 (opcional, somente para o `test_window_quick.py`)
 
 ## Como instalar
 
@@ -47,6 +49,9 @@ cd /home/dionarley/codes-area/Freecad_UI_UX_Experiment
 
 # Com uv (cria o .venv e instala só o pytest)
 uv sync
+
+# Com o teste de janela (instala também o PySide6; ~200 MB)
+uv sync --extra window
 
 # Com mise (instala o Python 3.11 se necessário)
 mise exec python@3.11 -- uv sync
@@ -75,6 +80,41 @@ lab.open_quick_menu()
 lab.restore()
 ```
 
+## Teste rápido de janela/dock (`test_window_quick.py`)
+
+O teste em `tests/test_window_quick.py` replica o mínimo da API de janela/dock do
+FreeCAD, sem precisar do FreeCAD instalado. Usa apenas PySide6 (ou PySide2) com
+`QT_QPA_PLATFORM=offscreen` (sem display).
+
+Foi modelado em três fontes do [FreeCAD/FreeCAD](https://github.com/FreeCAD/FreeCAD):
+
+| Fonte do FreeCAD | O que foi extraído |
+|---|---|
+| `src/Gui/DockWindow.h` | Classe base de dock (`QWidget` + `BaseView`, métodos `onUpdate`, `getName`, `canClose`) |
+| `src/Gui/DockWindowManager.h` | Singleton que gerencia `QDockWidget`: `addDockWindow`, `getDockContainer`, `registerDockWindow`, `saveState`/`loadState` |
+| `src/Gui/Stylesheets/` | Padrões QSS para docks, menus, botões, etc. |
+
+A réplica mínima (`DockWindowManager` no teste) oferece:
+
+- `register(name, widget, area)` — registra widget num `QDockWidget`
+- `get_dock(name)` / `get_widget(name)` — recupera por nome
+- `set_visible(name, bool)` / `is_visible(name)` — controla visibilidade
+- `hide_names(names)` / `show_names(names)` — esconde/mostra vários docks
+- `apply_qss(qss)` — aplica folha de estilo na janela principal
+- `list_docks()` / `save_state()` — inspeção e persistência de estado
+
+```sh
+# Roda o teste de janela (precisa do extra "window")
+uv run pytest tests/test_window_quick.py -q
+```
+
+Saída esperada (com PySide6 instalado): `6 passed in 0.XXs`.
+
+> **Nota:** este ambiente de desenvolvimento não tem `libGL.so.1`, então o PySide6 não
+> pode ser importado aqui. O teste é pulado automaticamente quando PySide6 não está
+> disponível. Funciona em qualquer máquina com PySide6 + OpenGL.
+```
+
 ## Testes
 
 Os testes não precisam de FreeCAD instalado e ocupam pouco espaço em disco:
@@ -83,7 +123,11 @@ Os testes não precisam de FreeCAD instalado e ocupam pouco espaço em disco:
 uv run pytest -q
 ```
 
-Saída esperada: `3 passed in 0.01s`.
+Saída esperada (sem PySide6): `3 passed in 0.01s`.  
+Saída esperada (com PySide6 + libGL): `9 passed`.
+
+Os testes de janela (`test_window_quick.py`) são pulados automaticamente quando
+PySide6 não está instalado — não ocupam disco se não forem usados.
 
 ## Licença
 
