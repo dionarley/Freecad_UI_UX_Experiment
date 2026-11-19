@@ -40,6 +40,9 @@ window = [
 dev = [
     { name = "pytest" },
 ]
+window = [
+    { name = "pyside6" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -50,6 +53,7 @@ provides-extras = ["test", "window"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=7.0" }]
+window = [{ name = "pyside6", specifier = ">=6.4" }]
 
 [[package]]
 name = "iniconfig"

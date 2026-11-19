@@ -21,8 +21,13 @@ try:
     from PySide6 import QtCore, QtGui, QtWidgets
     QT_BINDING = "PySide6"
 except ImportError:  # pragma: no cover
-    from PySide2 import QtCore, QtGui, QtWidgets  # type: ignore[no-redef,assignment]
-    QT_BINDING = "PySide2"
+    try:
+        from PySide2 import QtCore, QtGui, QtWidgets  # type: ignore[no-redef,assignment]
+        QT_BINDING = "PySide2"
+    except ImportError:
+        raise ModuleNotFoundError(
+            "PySide6 ou PySide2 não instalado. Rode: uv sync --extra window"
+        )
 
 CONFIG_FILE = os.path.join(os.path.dirname(__file__), "ui_lab_config.json")
 

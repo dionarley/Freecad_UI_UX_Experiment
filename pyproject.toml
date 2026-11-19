@@ -12,6 +12,7 @@ window = ["PySide6>=6.4"]
 [tool.uv]
 [dependency-groups]
 dev = ["pytest>=7.0"]
+window = ["PySide6>=6.4"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
