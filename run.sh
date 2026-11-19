@@ -40,13 +40,18 @@ case "$cmd" in
   app)
     uv sync --extra window
     # Verifica se o PySide6 está disponível após o sync
-    if ! uv run python -c "from PySide6 import QtCore, QtGui, QtWidgets" 2>/dev/null; then
-      echo ""
-      echo "ERRO: PySide6 não pôde ser importado após a instalação."
-      echo "Isso geralmente significa que falta libGL.so.1 no seu sistema."
-      echo "Instale as bibliotecas OpenGL do seu sistema (ex: libgl1-mesa-glx no Debian/Ubuntu)."
-      echo ""
-      exit 1
+    if [ "${SKIP_QT_CHECK:-0}" != "1" ]; then
+      if ! uv run python -c "from PySide6 import QtCore, QtGui, QtWidgets" 2>/dev/null; then
+        echo ""
+        echo "ERRO: PySide6 não pôde ser importado após a instalação."
+        echo "Isso geralmente significa que falta libGL.so.1 no seu sistema."
+        echo "Instale as bibliotecas OpenGL do seu sistema (ex: libgl1-mesa-glx no Debian/Ubuntu)."
+        echo ""
+        echo "Se não puder instalar OpenGL, pule a verificação com:"
+        echo "  SKIP_QT_CHECK=1 ./run.sh app"
+        echo ""
+        exit 1
+      fi
     fi
     uv run python ui_lab_app.py
     ;;

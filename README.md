@@ -453,6 +453,18 @@ uv sync --extra window
 ./run.sh app
 ```
 
+Se **não puder instalar OpenGL** (ex: sem privilégios de root, container mínimo), pule a verificação do Qt com:
+
+```sh
+SKIP_QT_CHECK=1 ./run.sh app
+```
+
+Isso ignora a checagem de importação do PySide6. A janela ainda não abrirá sem OpenGL, mas o script continuará. Para apenas rodar os testes básicos (que não precisam de PySide):
+
+```sh
+uv run pytest tests/test_ui_lab.py -q
+```
+
 ## Licenses / Licenças
 
 ### Código (Python) — GNU LGPL v3
