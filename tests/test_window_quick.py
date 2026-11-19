@@ -16,186 +16,134 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 import pytest
 
 try:
-    from PySide6 import QtCore, QtWidgets
+    from PySide6 import QtCore, QtGui, QtWidgets
     HAS_QT = True
 except ImportError:  # pragma: no cover
     try:
-        from PySide2 import QtCore, QtWidgets  # type: ignore[no-redef,assignment]
+        from PySide2 import QtCore, QtGui, QtWidgets  # type: ignore[no-redef,assignment]
         HAS_QT = True
     except ImportError:  # pragma: no cover
-        QtCore = None
-        QtWidgets = None
         HAS_QT = False
-
-
-# --- Mínimo extraído do FreeCAD (adaptado para teste autônomo) -------------
-
-DOCK_NAMES = {
-    "Report view",
-    "Python console",
-    "Selection view",
-    "DAG view",
-}
-
-TEST_QSS = """
-QDockWidget {
-    titlebar-close-icon: none;
-}
-QDockWidget::title {
-    padding: 5px 8px;
-    font-weight: 600;
-}
-QMenu {
-    padding: 4px;
-    border-radius: 6px;
-}
-QMenu::item {
-    padding: 5px 16px;
-    border-radius: 4px;
-}
-"""
 
 
 if HAS_QT:  # pragma: no cover
 
-    class DockWindowManager:
-        """Réplica mínima do Gui::DockWindowManager do FreeCAD.
+    # --- Mínimo extraído do FreeCAD (adaptado para teste autônomo) -------------
 
-        Gerencia QDockWidgets dentro de um QMainWindow, com registro por nome,
-        área de encaixe, visibilidade e persistência de estado.
-        """
+    DOCK_NAMES = {
+        "Report view",
+        "Python console",
+        "Selection view",
+        "DAG view",
+    }
 
-        def __init__(self, main_window):
-            self._mw = main_window
-            self._docks = {}          # name -> QDockWidget
-            self._widgets = {}        # name -> QWidget (conteúdo)
-            self._areas = {}          # name -> Qt::DockWidgetArea
+    TEST_QSS = """
+    QDockWidget {
+        titlebar-close-icon: none;
+    }
+    QDockWidget::title {
+        padding: 5px 8px;
+        font-weight: 600;
+    }
+    QMenu {
+        padding: 4px;
+        border-radius: 6px;
+    }
+    QMenu::item {
+        padding: 5px 16px;
+        border-radius: 4px;
+    }
+    """
 
-        def register(self, name, widget, area=QtCore.Qt.LeftDockWidgetArea):
-            """Registra um widget e o coloca num QDockWidget na janela principal."""
-            dock = QtWidgets.QDockWidget(name, self._mw)
+    @pytest.fixture
+    def app():
+        """Cria uma QApplication para os testes."""
+        instance = QtWidgets.QApplication.instance()
+        if instance is None:
+            instance = QtWidgets.QApplication([])
+        return instance
+
+    def test_cria_janela_principal(app):
+        """Cria uma QMainWindow simples."""
+        mw = QtWidgets.QMainWindow()
+        mw.setWindowTitle("FreeCAD UI-LAB")
+        assert mw.windowTitle() == "FreeCAD UI-LAB"
+
+    def test_adiciona_dock_visivel(app):
+        """Registra um QDockWidget e verifica que está visível."""
+        mw = QtWidgets.QMainWindow()
+
+        docks = {}
+
+        def register(name, widget, area=QtCore.Qt.LeftDockWidgetArea):
+            dock = QtWidgets.QDockWidget(name, mw)
             dock.setObjectName(name)
             dock.setWidget(widget)
-            self._mw.addDockWidget(area, dock)
-            self._docks[name] = dock
-            self._widgets[name] = widget
-            self._areas[name] = area
+            mw.addDockWidget(area, dock)
+            docks[name] = dock
             return dock
 
-        def get_dock(self, name):
-            """Retorna o QDockWidget pelo nome."""
-            return self._docks.get(name)
+        widget = QtWidgets.QWidget()
+        dock = register("Painel Teste", widget, QtCore.Qt.LeftDockWidgetArea)
+        assert dock is not None
+        assert docks["Painel Teste"] is dock
+        assert dock.isVisible()
 
-        def get_widget(self, name):
-            """Retorna o widget de conteúdo pelo nome."""
-            return self._widgets.get(name)
+    def test_esconde_docks_padrao(app):
+        """Esconde docks padrão do FreeCAD."""
+        mw = QtWidgets.QMainWindow()
 
-        def set_visible(self, name, visible):
-            dock = self._docks.get(name)
-            if dock is not None:
-                dock.setVisible(visible)
+        docks = {}
+        for name in DOCK_NAMES:
+            dock = QtWidgets.QDockWidget(name, mw)
+            dock.setObjectName(name)
+            dock.setWidget(QtWidgets.QWidget())
+            mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, dock)
+            docks[name] = dock
 
-        def is_visible(self, name):
-            dock = self._docks.get(name)
-            return dock.isVisible() if dock is not None else False
+        for name in DOCK_NAMES:
+            docks[name].setVisible(False)
 
-        def hide_names(self, names):
-            for name in names:
-                self.set_visible(name, False)
+        for name in DOCK_NAMES:
+            assert not docks[name].isVisible()
 
-        def show_names(self, names):
-            for name in names:
-                self.set_visible(name, True)
+    def test_aplica_qss(app):
+        """Aplica QSS na janela principal."""
+        mw = QtWidgets.QMainWindow()
+        mw.setStyleSheet(TEST_QSS)
+        assert mw.styleSheet().strip()
 
-        def apply_qss(self, qss):
-            self._mw.setStyleSheet(qss)
+    def test_lista_docks_retorna_info(app):
+        """Lista docks com nome e visibilidade."""
+        mw = QtWidgets.QMainWindow()
 
-        def list_docks(self):
-            info = []
-            for name, dock in self._docks.items():
-                info.append({
-                    "name": name,
-                    "objectName": dock.objectName(),
-                    "isVisible": dock.isVisible(),
-                    "area": self._areas[name],
-                })
-            return info
+        dock = QtWidgets.QDockWidget("Relatório", mw)
+        dock.setObjectName("Relatório")
+        dock.setWidget(QtWidgets.QWidget())
+        mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, dock)
 
-        def save_state(self):
-            return {
-                name: {"area": str(area), "visible": dock.isVisible()}
-                for name, (dock, area) in {
-                    n: (self._docks[n], self._areas[n]) for n in self._docks
-                }.items()
-            }
+        info = []
+        for d in mw.findChildren(QtWidgets.QDockWidget):
+            info.append({
+                "name": d.objectName() or d.windowTitle() or "sem nome",
+                "isVisible": d.isVisible(),
+            })
 
+        assert len(info) == 1
+        assert info[0]["name"] == "Relatório"
 
-# --- Testes ----------------------------------------------------------------
+    def test_save_state_preserva_visibilidade(app):
+        """Salva o estado de visibilidade de um dock."""
+        mw = QtWidgets.QMainWindow()
 
-def _app():
-    return QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+        dock = QtWidgets.QDockWidget("Estado", mw)
+        dock.setObjectName("Estado")
+        dock.setWidget(QtWidgets.QWidget())
+        mw.addDockWidget(QtCore.Qt.LeftDockWidgetArea, dock)
+        dock.setVisible(False)
 
+        state = {}
+        for d in mw.findChildren(QtWidgets.QDockWidget):
+            state[d.objectName()] = d.isVisible()
 
-@pytest.mark.skipif(not HAS_QT, reason="PySide6/PySide2 não instalado")
-def test_cria_janela_principal():
-    _app()
-    mw = QtWidgets.QMainWindow()
-    mw.setWindowTitle("FreeCAD UI-LAB")
-    assert mw.windowTitle() == "FreeCAD UI-LAB"
-
-
-@pytest.mark.skipif(not HAS_QT, reason="PySide6/PySide2 não instalado")
-def test_adiciona_dock_visivel():
-    _app()
-    mw = QtWidgets.QMainWindow()
-    mgr = DockWindowManager(mw)
-    widget = QtWidgets.QWidget()
-    dock = mgr.register("Painel Teste", widget, QtCore.Qt.LeftDockWidgetArea)
-    assert dock is not None
-    assert mgr.get_dock("Painel Teste") is dock
-    assert mgr.get_widget("Painel Teste") is widget
-    assert mgr.is_visible("Painel Teste")
-
-
-@pytest.mark.skipif(not HAS_QT, reason="PySide6/PySide2 não instalado")
-def test_esconde_docks_padrao():
-    _app()
-    mw = QtWidgets.QMainWindow()
-    mgr = DockWindowManager(mw)
-    for name in DOCK_NAMES:
-        mgr.register(name, QtWidgets.QWidget())
-    mgr.hide_names(DOCK_NAMES)
-    for name in DOCK_NAMES:
-        assert not mgr.is_visible(name)
-
-
-@pytest.mark.skipif(not HAS_QT, reason="PySide6/PySide2 não instalado")
-def test_aplica_qss():
-    _app()
-    mw = QtWidgets.QMainWindow()
-    mgr = DockWindowManager(mw)
-    mgr.register("Painel QSS", QtWidgets.QWidget())
-    mgr.apply_qss(TEST_QSS)
-    assert mw.styleSheet().strip()
-
-
-@pytest.mark.skipif(not HAS_QT, reason="PySide6/PySide2 não instalado")
-def test_lista_docks_retorna_info():
-    _app()
-    mw = QtWidgets.QMainWindow()
-    mgr = DockWindowManager(mw)
-    mgr.register("Relatório", QtWidgets.QWidget())
-    info = mgr.list_docks()
-    assert len(info) == 1
-    assert info[0]["name"] == "Relatório"
-
-
-@pytest.mark.skipif(not HAS_QT, reason="PySide6/PySide2 não instalado")
-def test_save_state_preserva_visibilidade():
-    _app()
-    mw = QtWidgets.QMainWindow()
-    mgr = DockWindowManager(mw)
-    mgr.register("Estado", QtWidgets.QWidget())
-    mgr.set_visible("Estado", False)
-    state = mgr.save_state()
-    assert state["Estado"]["visible"] is False
+        assert state["Estado"] is False

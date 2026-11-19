@@ -6,10 +6,12 @@ código original do repositório.
 Funciona de duas formas:
 1. Dentro do FreeCAD (PySide já carregado): reutiliza a main window do
    FreeCAD e imprime no Console Python do aplicativo.
-2. Fora do FreeCAD (standalone): cria sua própria QApplication e uma janela
-   independente, apenas para demonstrar a UI.
+2. Fora do FreeCAD (standalone): cria sua própria janela independente.
 
 Compatível com PySide6 (FreeCAD >= 1.0) e PySide2 (FreeCAD < 1.0).
+Se PySide não estiver instalado, o módulo pode ser importado sem erro, mas
+qualquer tentativa de instanciar a janela lançará ModuleNotFoundError com
+mensagem clara.
 """
 
 import os
@@ -19,11 +21,23 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 try:
     from PySide6 import QtCore, QtGui, QtWidgets
     QT_BINDING = "PySide6"
+    HAS_QT = True
 except ImportError:  # pragma: no cover
     try:
         from PySide2 import QtCore, QtGui, QtWidgets  # type: ignore[no-redef,assignment]
         QT_BINDING = "PySide2"
+        HAS_QT = True
     except ImportError:
+        QtCore = None
+        QtGui = None
+        QtWidgets = None
+        QT_BINDING = None
+        HAS_QT = False
+
+
+def _require_qt():
+    """Lança ModuleNotFoundError com mensagem clara se PySide não estiver instalado."""
+    if not HAS_QT:
         raise ModuleNotFoundError(
             "PySide6 ou PySide2 não instalado. Rode: uv sync --extra window"
         )
@@ -31,18 +45,17 @@ except ImportError:  # pragma: no cover
 
 def make_app_icon(size=64):
     """Cria um ícone programático (sem arquivo externo) para a janela e botões."""
+    _require_qt()
     pixmap = QtGui.QPixmap(size, size)
     pixmap.fill(QtCore.Qt.transparent)
 
     painter = QtGui.QPainter(pixmap)
     painter.setRenderHint(QtGui.QPainter.Antialiasing)
 
-    # Fundo: círculo azul (cores do FreeCAD aproximadas)
     painter.setBrush(QtGui.QColor("#007acc"))  # azul FreeCAD
     painter.setPen(QtCore.Qt.NoPen)
     painter.drawEllipse(4, 4, size - 8, size - 8)
 
-    # Letra "F" branca no centro
     painter.setPen(QtGui.QPen(QtCore.Qt.white, 6))
     font = painter.font()
     font.setPointSize(int(size * 0.45))
@@ -58,100 +71,107 @@ def make_app_icon(size=64):
     return QtGui.QIcon(pixmap)
 
 
-class TestWindow(QtWidgets.QMainWindow):
-    """Janela principal com um botão de teste."""
+if HAS_QT:  # pragma: no cover
 
-    def __init__(self, parent=None, freeCAD_mode=False):
-        super().__init__(parent)
-        self.freeCAD_mode = freeCAD_mode
-        self.setWindowTitle(f"FreeCAD UI-LAB — Teste de Janela ({QT_BINDING})")
-        self.setWindowIcon(make_app_icon())
-        self.resize(400, 200)
+    class TestWindow(QtWidgets.QMainWindow):
+        """Janela principal com um botão de teste."""
 
-        central = QtWidgets.QWidget()
-        self.setCentralWidget(central)
+        def __init__(self, parent=None, freeCAD_mode=False):
+            super().__init__(parent)
+            self.freeCAD_mode = freeCAD_mode
+            self.setWindowTitle(
+                f"FreeCAD UI-LAB — Teste de Janela ({QT_BINDING})"
+            )
+            self.setWindowIcon(make_app_icon())
+            self.resize(400, 200)
 
-        layout = QtWidgets.QVBoxLayout(central)
+            central = QtWidgets.QWidget()
+            self.setCentralWidget(central)
 
-        # Título
-        title = QtWidgets.QLabel("Laboratório de UI/UX — Teste Rápido")
-        title.setAlignment(QtCore.Qt.AlignCenter)
-        font = title.font()
-        font.setPointSize(14)
-        font.setBold(True)
-        title.setFont(font)
-        layout.addWidget(title)
+            layout = QtWidgets.QVBoxLayout(central)
 
-        # Botão de teste (com ícone)
-        self.btn_test = QtWidgets.QPushButton(make_app_icon(24), "Executar Teste")
-        self.btn_test.setMinimumHeight(40)
-        self.btn_test.setIconSize(QtCore.QSize(20, 20))
-        self.btn_test.clicked.connect(self.on_test_clicked)
-        layout.addWidget(self.btn_test)
+            # Título
+            title = QtWidgets.QLabel("Laboratório de UI/UX — Teste Rápido")
+            title.setAlignment(QtCore.Qt.AlignCenter)
+            font = title.font()
+            font.setPointSize(14)
+            font.setBold(True)
+            title.setFont(font)
+            layout.addWidget(title)
 
-        # Botão de sair/fechar
-        self.btn_close = QtWidgets.QPushButton("Fechar")
-        self.btn_close.setMinimumHeight(32)
-        self.btn_close.clicked.connect(self.close)
-        layout.addWidget(self.btn_close)
+            # Botão de teste (com ícone)
+            self.btn_test = QtWidgets.QPushButton(make_app_icon(24), "Executar Teste")
+            self.btn_test.setMinimumHeight(40)
+            self.btn_test.setIconSize(QtCore.QSize(20, 20))
+            self.btn_test.clicked.connect(self.on_test_clicked)
+            layout.addWidget(self.btn_test)
 
-        # Área de log (saída)
-        self.log = QtWidgets.QPlainTextEdit()
-        self.log.setReadOnly(True)
-        self.log.setPlaceholderText("Os resultados do teste aparecerão aqui...")
-        self.log.setMaximumHeight(120)
-        layout.addWidget(self.log)
+            # Botão de sair/fechar
+            self.btn_close = QtWidgets.QPushButton("Fechar")
+            self.btn_close.setMinimumHeight(32)
+            self.btn_close.clicked.connect(self.close)
+            layout.addWidget(self.btn_close)
 
-        layout.addStretch()
+            # Área de log (saída)
+            self.log = QtWidgets.QPlainTextEdit()
+            self.log.setReadOnly(True)
+            self.log.setPlaceholderText(
+                "Os resultados do teste aparecerão aqui..."
+            )
+            self.log.setMaximumHeight(120)
+            layout.addWidget(self.log)
 
-    def log_msg(self, msg):
-        """Escreve uma mensagem na área de log e no console do FreeCAD, se houver."""
-        self.log.appendPlainText(msg)
-        # Dentro do FreeCAD, também escreve no Console Python da aplicação
+            layout.addStretch()
+
+        def log_msg(self, msg):
+            """Escreve uma mensagem na área de log e no console do FreeCAD, se houver."""
+            self.log.appendPlainText(msg)
+            try:
+                import FreeCAD as App  # noqa: F401
+                App.Console.PrintMessage(f"[UI-LAB] {msg}\n")
+            except Exception:
+                pass
+
+        def on_test_clicked(self):
+            """Ação disparada ao clicar no botão de teste."""
+            self.log_msg(">>> Botão de teste pressionado")
+            self.log_msg(f"Binding Qt: {QT_BINDING}")
+            self.log_msg(f"Janela visível: {self.isVisible()}")
+            self.log_msg(">>> Teste concluído com sucesso")
+
+    def run_standalone():
+        """Executa a janela de modo standalone (fora do FreeCAD)."""
+        _require_qt()
+        app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+        win = TestWindow(freeCAD_mode=False)
+        win.show()
+        if __name__ == "__main__":
+            app.exec()
+
+    def run_in_freecad():
+        """Integra a janela de teste na main window do FreeCAD."""
+        _require_qt()
         try:
-            import FreeCAD as App  # noqa: F401
-            App.Console.PrintMessage(f"[UI-LAB] {msg}\n")
-        except Exception:
-            pass
+            import FreeCADGui as Gui
+        except ImportError:
+            raise RuntimeError(
+                "FreeCADGui não disponível; rode em modo standalone."
+            )
 
-    def on_test_clicked(self):
-        """Ação disparada ao clicar no botão de teste."""
-        self.log_msg(">>> Botão de teste pressionado")
-        self.log_msg(f"Binding Qt: {QT_BINDING}")
-        self.log_msg(f"Janela visível: {self.isVisible()}")
-        self.log_msg(">>> Teste concluído com sucesso")
+        mw = Gui.getMainWindow()
+        if mw is None:
+            raise RuntimeError("MainWindow do FreeCAD não encontrada.")
 
-
-def run_standalone():
-    """Executa a janela de modo standalone (fora do FreeCAD)."""
-    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
-    win = TestWindow(freeCAD_mode=False)
-    win.show()
-    # Se estiver rodando como script direto, entra no loop de eventos
-    if __name__ == "__main__":
-        app.exec()
-
-
-def run_in_freecad():
-    """Integra a janela de teste na main window do FreeCAD."""
-    try:
-        import FreeCADGui as Gui
-    except ImportError:
-        raise RuntimeError("FreeCADGui não disponível; rode em modo standalone.")
-
-    mw = Gui.getMainWindow()
-    if mw is None:
-        raise RuntimeError("MainWindow do FreeCAD não encontrada.")
-
-    # Reutiliza a janela principal do FreeCAD como parent para não criar
-    # uma segunda janela fora do aplicativo.
-    win = TestWindow(parent=mw, freeCAD_mode=True)
-    win.setWindowModality(QtCore.Qt.NonModal)
-    win.show()
-    win.raise_()
-    win.activateWindow()
-    return win
+        win = TestWindow(parent=mw, freeCAD_mode=True)
+        win.setWindowModality(QtCore.Qt.NonModal)
+        win.show()
+        win.raise_()
+        win.activateWindow()
+        return win
 
 
 if __name__ == "__main__":
-    run_standalone()
+    if HAS_QT:
+        run_standalone()
+    else:
+        print("PySide6 ou PySide2 não instalado. Rode: uv sync --extra window")

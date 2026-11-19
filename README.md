@@ -169,6 +169,19 @@ podman build -t freecad-ui-lab .
 podman run --rm freecad-ui-lab
 ```
 
+## Documentação
+
+Documentação detalhada em `docs/`:
+
+| Arquivo | Descrição |
+|---|---|
+| `docs/visao-geral.md` | Visão geral do projeto |
+| `docs/instalacao.md` | Como instalar e configurar |
+| `docs/uso-probe.md` | Como usar o `ui_lab_probe.py` dentro do FreeCAD |
+| `docs/uso-app.md` | Como usar o `ui_lab_app.py` (app real de UI/UX) |
+| `docs/testes.md` | Como rodar os testes |
+| `docs/arquitetura.md` | Arquitetura e dependências do projeto |
+
 ## Licença
 
 Todo o conteúdo deste repositório (código, documentação e arquivos) está
