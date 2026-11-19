@@ -14,7 +14,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY pyproject.toml uv.lock ./
 
 # Instala dependências de dev (pytest)
-RUN uv sync --frozen --no-install-project --group dev
+RUN uv sync --frozen --group dev
 
 # Copia o restante do projeto
 COPY . .
