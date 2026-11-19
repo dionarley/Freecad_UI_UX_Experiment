@@ -1,98 +1,247 @@
 # FreeCAD UI/UX Experiment
 
-Experimento de UI/UX para o FreeCAD. O objetivo é testar se o FreeCAD é viável
-para customizar a interface (esconder docks, aplicar QSS, menu contextual rápido)
-e, se der certo, enviar para a comunidade.
+<!-- English -->
+## Overview
 
-:)
+This repository is a laboratory of UI/UX experiments for FreeCAD. The goal is to
+test whether FreeCAD is viable for customizing the interface (hiding docks,
+applying QSS, quick context menu, managing docks, editing styles live) and, if
+it works well, contribute improvements to the community.
 
-> p.s. i'm not a good programmer yet, and i'm portuguese native speaking.  
-> by Dionatley R V  
-> God And Odin Bless us !
+## Visão Geral (Português)
 
-## O que este projeto faz
+Este repositório é um laboratório de experimentos de UI/UX para o FreeCAD. O
+objetivo é testar se o FreeCAD é viável para customizar a interface (esconder
+docks, aplicar QSS, menu contextual rápido, gerenciar docks, editar estilos ao
+vivo) e, se der certo, enviar melhorias para a comunidade.
+
+---
+
+<!-- English -->
+## What this project does
+
+The script `ui_lab_probe.py` creates a small UI laboratory inside FreeCAD:
+
+- **List docks** — shows all active `QDockWidget` with name, title, and visibility (useful to find exact names in your version/workbench).
+- **Apply layout and QSS** — hides default docks (Report view, Python console, Selection view, DAG view) and applies a test stylesheet with contrast, spacing, and borders for docks and menus.
+- **Quick context menu** — shortcut `Ctrl+Shift+Space` opens a light menu with: active document, recompute document, fit all view, and restore original UI.
+- **Restore** — undoes everything (visibility and stylesheet) without restarting FreeCAD.
+
+The file `ui_lab_app.py` is a **real UI/UX application** (not just a test),
+standalone and compatible with FreeCAD:
+
+- **Docks tab** — lists and controls visibility of all application docks.
+- **QSS / Style tab** — live stylesheet editor applied to the FreeCAD MainWindow or the app window.
+- **Info / Control tab** — FreeCAD status, buttons to recompute document and fit all view.
+- **Integrated log** — writes to the FreeCAD Python Console when run inside it.
+- Works **standalone** (without FreeCAD) and **inside FreeCAD**.
+
+## Visão Geral (Português)
 
 O script `ui_lab_probe.py` cria um pequeno "laboratório" de UI dentro do FreeCAD:
 
 - **Listar docks** — mostra todos os `QDockWidget` ativos com nome, título e visibilidade (útil para descobrir nomes exatos na sua versão/bancada).
-- **Aplicar layout e QSS** — esconde docks padrão (Report view, Python console, Selection view, DAG view) e aplica uma folha de estilo de teste com contraste, espaçamento e bordas em docks e menus.
-- **Menu contextual rápido** — atalho `Ctrl+Shift+Space` que abre um menu leve com: documento ativo, recalcular documento, ajustar visualização (Fit All) e restaurar UI original.
-- **Restaurar** — desfaz tudo sem reiniciar o FreeCAD.
+- **Aplicar layout e QSS** — esconde docks padrão (Report view, Python console, Selection view, DAG view) e aplica uma folha de estilo de teste com contraste, espaçamento e bordas para docks e menus.
+- **Menu contextual rápido** — atalho `Ctrl+Shift+Space` abre um menu leve com: documento ativo, recalcular documento, ajustar visualização (Fit All) e restaurar UI original.
+- **Restaurar** — desfaz tudo (visibilidade e stylesheet) sem reiniciar o FreeCAD.
 
-O arquivo `ui_lab_app.py` é um **aplicativo real de UI/UX** (não só um teste), autônomo e compatível com o FreeCAD:
+O arquivo `ui_lab_app.py` é uma **aplicação real de UI/UX** (não só um teste),
+autônoma e compatível com o FreeCAD:
 
 - **Aba Docks** — lista e controla a visibilidade de todos os docks da aplicação.
 - **Aba QSS / Estilo** — editor de folha de estilo com aplicação ao vivo na MainWindow do FreeCAD ou na janela do app.
 - **Aba Info / Controle** — status do FreeCAD, botões para recalcular documento e ajustar visualização (Fit All).
-- **Log integrado** que escreve no Console Python do FreeCAD quando rodado dentro dele.
+- **Log integrado** — escreve no Console Python do FreeCAD quando rodado dentro dele.
 - Funciona **standalone** (sem FreeCAD) e **dentro do FreeCAD**.
+
+---
+
+## Repository structure
+
+```
+freecad-ui-ux-experiment/
+├── .gitignore
+├── .mise.toml          # Python 3.11 via mise (optional)
+├── LICENSE             # CC BY 4.0
+├── README.md
+├── index.html          # bilingual project overview (En/PT-BR)
+├── USO.md              # usage example inside FreeCAD (PT-BR)
+├── USO_EN.md           # usage example inside FreeCAD (English)
+├── pyproject.toml      # uv project + pytest (dev dependency)
+├── uv.lock             # locked dependencies
+├── ui_lab_probe.py     # UI laboratory script (probe)
+├── ui_lab_app.py       # real UI/UX application
+├── window_test.py      # test window with button
+├── Dockerfile          # minimal container for tests
+├── .dockerignore
+├── run.sh              # execution script (sync, test, window, app, clean)
+├── docs/               # detailed documentation
+│   ├── visao-geral.md  # project overview (PT-BR)
+│   ├── overview.md     # project overview (English)
+│   ├── instalacao.md   # installation (PT-BR)
+│   ├── installation.md # installation (English)
+│   ├── uso-probe.md    # how to use ui_lab_probe.py (PT-BR)
+│   ├── use-probe.md    # how to use ui_lab_probe.py (English)
+│   ├── uso-app.md      # how to use ui_lab_app.py (PT-BR)
+│   ├── use-app.md      # how to use ui_lab_app.py (English)
+│   ├── testes.md       # tests (PT-BR)
+│   ├── tests.md        # tests (English)
+│   └── arquitetura.md  # architecture (PT-BR/English)
+└── tests/
+    ├── test_ui_lab.py              # minimal test (no FreeCAD or PySide needed)
+    ├── test_window_quick.py        # quick window/dock test (needs PySide6)
+    ├── test_app.py                 # app test (needs PySide6)
+    └── test_dependencies.py        # dependency check (needs PySide6)
+```
 
 ## Estrutura do repositório
 
 ```
-Freecad_UI_UX_Experiment/
-├ .gitignore
-├ .mise.toml          # Python 3.11 via mise
-├ LICENSE             # CC BY 4.0
-├ README.md
-├ USO.md              # exemplo de execução dentro do FreeCAD
-├ pyproject.toml      # projeto uv + pytest (dependência de dev)
-├ uv.lock             # dependências travadas
-├ ui_lab_probe.py     # script do laboratório de UI/UX (probe)
-├ ui_lab_app.py       # aplicativo real de UI/UX
-├ window_test.py      # janela com botão de teste
-├ Dockerfile          # container mínimo para rodar os testes
-├ .dockerignore
-├ run.sh              # script de execução (sync, test, window, app, clean)
+freecad-ui-ux-experiment/
+├── .gitignore
+├── .mise.toml          # Python 3.11 via mise (opcional)
+├── LICENSE             # CC BY 4.0
+├── README.md
+├── index.html          # visão geral bilíngue do projeto (En/PT-BR)
+├── USO.md              # exemplo de uso dentro do FreeCAD (PT-BR)
+├── USO_EN.md           # exemplo de uso dentro do FreeCAD (Inglês)
+├── pyproject.toml      # projeto uv + pytest (dependência de dev)
+├── uv.lock             # dependências travadas
+├── ui_lab_probe.py     # script do laboratório de UI (probe)
+├── ui_lab_app.py       # aplicação real de UI/UX
+├── window_test.py      # janela de teste com botão
+├── Dockerfile          # container mínimo para testes
+├── .dockerignore
+├── run.sh              # script de execução (sync, test, window, app, clean)
+├── docs/               # documentação detalhada
+│   ├── visao-geral.md  # visão geral do projeto (PT-BR)
+│   ├── overview.md     # visão geral do projeto (Inglês)
+│   ├── instalacao.md   # instalação (PT-BR)
+│   ├── installation.md # instalação (Inglês)
+│   ├── uso-probe.md    # como usar o ui_lab_probe.py (PT-BR)
+│   ├── use-probe.md    # como usar o ui_lab_probe.py (Inglês)
+│   ├── uso-app.md      # como usar o ui_lab_app.py (PT-BR)
+│   ├── use-app.md      # como usar o ui_lab_app.py (Inglês)
+│   ├── testes.md       # testes (PT-BR)
+│   ├── tests.md        # testes (Inglês)
+│   └── arquitetura.md  # arquitetura (PT-BR/Inglês)
 └── tests/
     ├── test_ui_lab.py              # teste mínimo (não precisa de FreeCAD nem PySide)
-    └── test_window_quick.py        # teste rápido de janela/dock (precisa de PySide6)
+    ├── test_window_quick.py        # teste rápido de janela/dock (precisa de PySide6)
+    ├── test_app.py                 # teste do app (precisa de PySide6)
+    └── test_dependencies.py        # verificação de dependências (precisa de PySide6)
 ```
 
-## Requisitos
+## Requirements / Requisitos
 
-- Python >= 3.10 (via [mise](https://mise.jdx.dev/) ou [uv](https://github.com/astral-sh/uv))
-- FreeCAD (para usar o script dentro da aplicação)
-- pytest (somente para rodar os testes)
-- PySide6 (opcional, somente para o `test_window_quick.py`, `window_test.py` e `ui_lab_app.py`)
+- Python >= 3.10 (via [mise](https://mise.jdx.dev/) or [uv](https://github.com/astral-sh/uv))
+- FreeCAD (to use the script inside the application / para usar o script dentro da aplicação)
+- pytest (only to run tests / somente para rodar os testes)
+- PySide6 (optional, only for `test_window_quick.py`, `window_test.py` and `ui_lab_app.py` / opcional, somente para `test_window_quick.py`, `window_test.py` e `ui_lab_app.py`)
 
-## Como instalar
+## Installation / Instalação
 
 ```sh
-cd /home/dionarley/codes-area/Freecad_UI_UX_Experiment
+# Clone or download this repository, then:
+cd freecad-ui-ux-experiment
 
-# Com uv (cria o .venv e instala só o pytest)
+# With uv (creates .venv and installs only pytest)
 uv sync
 
-# Com o teste de janela e o app (instala também o PySide6; ~200 MB)
+# With window/app support (also installs PySide6; ~200 MB)
+uv sync --extra window
+
+# With mise (installs Python 3.11 if needed)
+mise exec python@3.11 -- uv sync
+```
+
+```sh
+# Clone ou baixe este repositório, então:
+cd freecad-ui-ux-experiment
+
+# Com uv (cria .venv e instala apenas o pytest)
+uv sync
+
+# Com suporte a janela/app (instala também o PySide6; ~200 MB)
 uv sync --extra window
 
 # Com mise (instala o Python 3.11 se necessário)
 mise exec python@3.11 -- uv sync
 ```
 
-## Como usar (dentro do FreeCAD)
+## Using the `run.sh` script / Usando o script `run.sh`
 
-Veja `USO.md` para o exemplo completo do `ui_lab_probe.py`. Resumo:
+```sh
+./run.sh sync     # sync dependencies (uv sync)
+./run.sh test     # run tests (pytest)
+./run.sh window   # run including window test (uv sync --extra window)
+./run.sh app      # run the real UI/UX app (standalone, needs PySide6)
+./run.sh clean    # remove .venv and __pycache__
+```
+
+```sh
+./run.sh sync     # sincroniza dependências (uv sync)
+./run.sh test     # roda os testes (pytest)
+./run.sh window   # roda incluindo o teste de janela (uv sync --extra window)
+./run.sh app      # executa o app real de UI/UX (standalone, requer PySide6)
+./run.sh clean    # remove .venv e __pycache__
+```
+
+## How to use (inside FreeCAD) / Como usar (dentro do FreeCAD)
+
+See `USO.md` (PT-BR) or `USO_EN.md` (English) for the complete `ui_lab_probe.py`
+example. Summary:
 
 ```python
 from ui_lab_probe import get_lab
 
 lab = get_lab()
 
-# 1. Ver nomes exatos dos docks
+# 1. List dock names
 for item in lab.list_docks():
     print(item)
 
-# 2. Aplicar o teste (esconde docks + QSS)
+# 2. Apply test (hide docks + QSS)
 lab.apply_layout_and_qss()
 
-# 3. Abrir menu contextual (também com Ctrl+Shift+Space)
+# 3. Open context menu (also Ctrl+Shift+Space)
+lab.open_quick_menu()
+
+# 4. Undo everything
+lab.restore()
+```
+
+Veja `USO.md` (PT-BR) ou `USO_EN.md` (Inglês) para o exemplo completo do
+`ui_lab_probe.py`. Resumo:
+
+```python
+from ui_lab_probe import get_lab
+
+lab = get_lab()
+
+# 1. Listar nomes dos docks
+for item in lab.list_docks():
+    print(item)
+
+# 2. Aplicar teste (esconder docks + QSS)
+lab.apply_layout_and_qss()
+
+# 3. Abrir menu contextual (também Ctrl+Shift+Space)
 lab.open_quick_menu()
 
 # 4. Desfazer tudo
 lab.restore()
 ```
+
+For the **real app** (`ui_lab_app.py`), open the FreeCAD Python Console:
+
+```python
+from ui_lab_app import run_in_freecad
+win = run_in_freecad()
+```
+
+O app se acopla à janela principal do FreeCAD e oferece gerenciamento de docks,
+editor de QSS ao vivo e controles de informação.
 
 Para o **app real** (`ui_lab_app.py`), abra o Console Python do FreeCAD:
 
@@ -103,6 +252,40 @@ win = run_in_freecad()
 
 O app se acopla à janela principal do FreeCAD e oferece gerenciamento de docks,
 editor de QSS ao vivo e controles de informação.
+
+## Quick window/dock test (`test_window_quick.py`)
+
+The test in `tests/test_window_quick.py` replicates the minimum FreeCAD
+window/dock API, without needing FreeCAD installed. It uses only PySide6 (or
+PySide2) with `QT_QPA_PLATFORM=offscreen` (no display).
+
+Modeled on three sources from [FreeCAD/FreeCAD](https://github.com/FreeCAD/FreeCAD):
+
+| FreeCAD source | What was extracted |
+|---|---|
+| `src/Gui/DockWindow.h` | Dock base class (`QWidget` + `BaseView`, methods `onUpdate`, `getName`, `canClose`) |
+| `src/Gui/DockWindowManager.h` | Singleton managing `QDockWidget`: `addDockWindow`, `getDockContainer`, `registerDockWindow`, `saveState`/`loadState` |
+| `src/Gui/Stylesheets/` | QSS patterns for docks, menus, buttons, etc. |
+
+The minimal replica (`DockWindowManager` in the test) offers:
+
+- `register(name, widget, area)` — registers a widget in a `QDockWidget`
+- `get_dock(name)` / `get_widget(name)` — retrieves by name
+- `set_visible(name, bool)` / `is_visible(name)` — controls visibility
+- `hide_names(names)` / `show_names(names)` — hides/shows multiple docks
+- `apply_qss(qss)` — applies stylesheet to the main window
+- `list_docks()` / `save_state()` — inspection and state persistence
+
+```sh
+# Run window test (needs the "window" extra)
+uv run pytest tests/test_window_quick.py -q
+```
+
+Expected output (with PySide6 installed): `6 passed in 0.XXs`.
+
+> **Note:** This development environment does not have `libGL.so.1`, so PySide6
+> cannot be imported here. Tests are automatically skipped when PySide6 is not
+> available. Works on any machine with PySide6 + OpenGL.
 
 ## Teste rápido de janela/dock (`test_window_quick.py`)
 
@@ -134,25 +317,45 @@ uv run pytest tests/test_window_quick.py -q
 
 Saída esperada (com PySide6 instalado): `6 passed in 0.XXs`.
 
-> **Nota:** este ambiente de desenvolvimento não tem `libGL.so.1`, então o PySide6 não
-> pode ser importado aqui. O teste é pulado automaticamente quando PySide6 não está
-> disponível. Funciona em qualquer máquina com PySide6 + OpenGL.
+> **Nota:** este ambiente de desenvolvimento não tem `libGL.so.1`, então o PySide6
+> não pode ser importado aqui. O teste é pulado automaticamente quando PySide6 não
+> está disponível. Funciona em qualquer máquina com PySide6 + OpenGL.
 
-## Testes
+## Tests / Testes
 
-Os testes não precisam de FreeCAD instalado e ocupam pouco espaço em disco:
+Tests do not need FreeCAD installed and take little disk space:
+
+```sh
+uv run pytest -q
+```
+
+Expected output (without PySide6): `3 passed in 0.01s`.  
+Expected output (with PySide6 + libGL): all tests pass.
+
+Window tests (`test_window_quick.py`) are automatically skipped when PySide6 is
+not installed — they do not use disk if unused.
+
+Os testes não precisam do FreeCAD instalado e ocupam pouco espaço em disco:
 
 ```sh
 uv run pytest -q
 ```
 
 Saída esperada (sem PySide6): `3 passed in 0.01s`.  
-Saída esperada (com PySide6 + libGL): `9 passed`.
+Saída esperada (com PySide6 + libGL): todos os testes passam.
 
 Os testes de janela (`test_window_quick.py`) são pulados automaticamente quando
 PySide6 não está instalado — não ocupam disco se não forem usados.
 
-## Executar o app real (standalone)
+## Run the real app (standalone) / Executar o app real (standalone)
+
+Outside FreeCAD, to develop and test the UI without the application:
+
+```sh
+./run.sh app
+# or
+uv sync --extra window && uv run python ui_lab_app.py
+```
 
 Fora do FreeCAD, para desenvolver e testar a UI sem precisar do aplicativo:
 
@@ -169,26 +372,65 @@ podman build -t freecad-ui-lab .
 podman run --rm freecad-ui-lab
 ```
 
-## Documentação
+The container runs the tests automatically when it starts.
+
+## Container (podman / docker)
+
+```sh
+podman build -t freecad-ui-lab .
+podman run --rm freecad-ui-lab
+```
+
+O container roda os testes automaticamente ao iniciar.
+
+## Documentation / Documentação
+
+Detailed documentation in `docs/`:
+
+| File | Description |
+|---|---|
+| `docs/overview.md` | Project overview (English) |
+| `docs/visao-geral.md` | Visão geral do projeto (PT-BR) |
+| `docs/installation.md` | Installation (English) |
+| `docs/instalacao.md` | Instalação (PT-BR) |
+| `docs/use-probe.md` | How to use `ui_lab_probe.py` (English) |
+| `docs/uso-probe.md` | Como usar o `ui_lab_probe.py` (PT-BR) |
+| `docs/use-app.md` | How to use `ui_lab_app.py` (English) |
+| `docs/uso-app.md` | Como usar o `ui_lab_app.py` (PT-BR) |
+| `docs/tests.md` | How to run tests (English) |
+| `docs/testes.md` | Como rodar os testes (PT-BR) |
+| `docs/arquitetura.md` | Architecture and dependencies (PT-BR/English) |
 
 Documentação detalhada em `docs/`:
 
 | Arquivo | Descrição |
 |---|---|
-| `docs/visao-geral.md` | Visão geral do projeto |
-| `docs/instalacao.md` | Como instalar e configurar |
-| `docs/uso-probe.md` | Como usar o `ui_lab_probe.py` dentro do FreeCAD |
-| `docs/uso-app.md` | Como usar o `ui_lab_app.py` (app real de UI/UX) |
-| `docs/testes.md` | Como rodar os testes |
-| `docs/arquitetura.md` | Arquitetura e dependências do projeto |
+| `docs/overview.md` | Visão geral do projeto (Inglês) |
+| `docs/visao-geral.md` | Visão geral do projeto (PT-BR) |
+| `docs/installation.md` | Instalação (Inglês) |
+| `docs/instalacao.md` | Instalação (PT-BR) |
+| `docs/use-probe.md` | Como usar o `ui_lab_probe.py` (Inglês) |
+| `docs/uso-probe.md` | Como usar o `ui_lab_probe.py` (PT-BR) |
+| `docs/use-app.md` | Como usar o `ui_lab_app.py` (Inglês) |
+| `docs/uso-app.md` | Como usar o `ui_lab_app.py` (PT-BR) |
+| `docs/tests.md` | Como rodar os testes (Inglês) |
+| `docs/testes.md` | Como rodar os testes (PT-BR) |
+| `docs/arquitetura.md` | Arquitetura e dependências (PT-BR/Inglês) |
 
-## Licença
+## License / Licença
+
+All content in this repository (code, documentation, and files) is licensed
+under **Creative Commons Attribution 4.0 International (CC BY 4.0)**. See the
+`LICENSE` file for the full text.
+
+CC BY 4.0 summary: you are free to share and adapt the material, even for
+commercial purposes, as long as you give appropriate credit, provide a link to
+the license, and indicate if changes were made.
 
 Todo o conteúdo deste repositório (código, documentação e arquivos) está
 licenciado sob **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
 Veja o arquivo `LICENSE` para o texto completo.
 
 Resumo da CC BY 4.0: você é livre para compartilhar e adaptar o material, mesmo
-para fins comerciais, desde que dê o crédito apropriado ao autor original
-(Dionatley R V), forneça um link para a licença e indique se foram feitas
-alterações.
+para fins comerciais, desde que dê o crédito apropriado, forneça um link para a
+licença e indique se foram feitas alterações.

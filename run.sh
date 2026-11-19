@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
-# Script de execução mínimo para o Freecad_UI_UX_Experiment.
-# Requer: uv (e mise, opcional).
+# Execution script for freecad-ui-ux-experiment.
+# Requires: uv (and mise, optional).
 set -euo pipefail
 
 cd "$(dirname "$0")"
 
 usage() {
+  echo "Usage: $0 {sync|test|window|app|clean}"
+  echo ""
+  echo "  sync     - sync dependencies (uv sync)"
+  echo "  test     - run tests (pytest)"
+  echo "  window   - run including window test (uv sync --extra window)"
+  echo "  app      - run the real UI/UX app (standalone, needs PySide6)"
+  echo "  clean    - remove .venv and __pycache__"
+  echo ""
   echo "Uso: $0 {sync|test|window|app|clean}"
   echo ""
   echo "  sync     - sincroniza dependências (uv sync)"
@@ -35,7 +43,7 @@ case "$cmd" in
     ;;
   clean)
     rm -rf .venv __pycache__ tests/__pycache__
-    echo "limpo."
+    echo "cleaned. / limpo."
     ;;
   *)
     usage

@@ -1,42 +1,45 @@
-# Arquitetura do Projeto
+# Architecture / Arquitetura
 
-## Componentes
+## Components
 
 ```
-Freecad_UI_UX_Experiment/
-├── ui_lab_probe.py     # Script de probe dentro do FreeCAD (não modificado)
-├── ui_lab_app.py       # Aplicação real de UI/UX (autônomo)
-├── window_test.py      # Janela simples com botão de teste (autônomo)
-├── tests/              # Testes pytest
-├── docs/               # Esta documentação
-├── run.sh              # Script de execução
-├── Dockerfile          # Container mínimo
-├── pyproject.toml      # Projeto uv + dependências
-├── uv.lock             # Dependências travadas
+freecad-ui-ux-experiment/
+├── ui_lab_probe.py     # Probe script inside FreeCAD (not modified)
+├── ui_lab_app.py       # Real UI/UX application (standalone)
+├── window_test.py      # Simple window with test button (standalone)
+├── tests/              # pytest tests
+├── docs/               # This documentation
+├── run.sh              # Execution script
+├── Dockerfile          # Minimal container
+├── pyproject.toml      # uv project + dependencies
+├── uv.lock             # Locked dependencies
 ├── .mise.toml          # Python 3.11 via mise
 └── LICENSE             # CC BY 4.0
 ```
 
-## Dependências entre arquivos
+## Dependencies between files
 
 ```
-ui_lab_probe.py  ← (nunca modificado, importado quando necessário)
-window_test.py   ← usa PySide6/PySide2 (opcional)
-ui_lab_app.py    ← usa PySide6/PySide2 (opcional)
-tests/           ← importam ui_lab_probe.py, ui_lab_app.py, window_test.py
+ui_lab_probe.py  ← (never modified, imported when needed)
+window_test.py   ← uses PySide6/PySide2 (optional)
+ui_lab_app.py    ← uses PySide6/PySide2 (optional)
+tests/           ← import ui_lab_probe.py, ui_lab_app.py, window_test.py
 ```
 
-## Fontes de referência do FreeCAD
+## FreeCAD reference sources
 
-O projeto foi modelado em partes do [FreeCAD/FreeCAD](https://github.com/FreeCAD/FreeCAD):
+The project was modeled on parts of [FreeCAD/FreeCAD](https://github.com/FreeCAD/FreeCAD):
 
-| Fonte | O que foi extraído |
+| FreeCAD source | What was extracted |
 |---|---|
-| `src/Gui/DockWindow.h` | Classe base de dock (`QWidget` + `BaseView`) |
-| `src/Gui/DockWindowManager.h` | Singleton gerenciando `QDockWidget` |
-| `src/Gui/Stylesheets/` | Padrões QSS para docks, menus, botões |
+| `src/Gui/DockWindow.h` | Dock base class (`QWidget` + `BaseView`) |
+| `src/Gui/DockWindowManager.h` | Singleton managing `QDockWidget` |
+| `src/Gui/Stylesheets/` | QSS patterns for docks, menus, buttons |
 
-## Licença
+## License / Licença
+
+All content is under **Creative Commons Attribution 4.0 International
+(CC BY 4.0)**. See `LICENSE` for the full text.
 
 Todo o conteúdo está sob **Creative Commons Attribution 4.0 International
 (CC BY 4.0)**. Veja `LICENSE` para o texto completo.

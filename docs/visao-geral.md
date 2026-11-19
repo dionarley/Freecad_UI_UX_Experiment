@@ -5,10 +5,6 @@ objetivo é testar se o FreeCAD é viável para customizar a interface (esconder
 docks, aplicar QSS, menu contextual rápido, gerenciar docks, editar estilos ao
 vivo) e, se der certo, enviar melhorias para a comunidade.
 
-> p.s. i'm not a good programmer yet, and i'm portuguese native speaking.  
-> by Dionatley R V  
-> God And Odin Bless us !
-
 ## O que está neste repositório
 
 | Arquivo | Descrição |

@@ -13,7 +13,7 @@ dependências e [mise](https://mise.jdx.dev/) para fixar a versão do Python.
 ## Passo a passo
 
 ```sh
-cd /home/dionarley/codes-area/Freecad_UI_UX_Experiment
+cd freecad-ui-ux-experiment
 
 # 1. Instalar dependências de desenvolvimento (pytest)
 uv sync

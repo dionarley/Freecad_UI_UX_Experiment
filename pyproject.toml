@@ -1,7 +1,7 @@
 [project]
 name = "freecad-ui-ux-experiment"
 version = "0.1.0"
-description = "Experimento de UI/UX para o FreeCAD (docks, QSS, menu contextual)"
+description = "FreeCAD UI/UX experiment laboratory (docks, QSS, context menu)"
 requires-python = ">=3.10"
 dependencies = []
 
