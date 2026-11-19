@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreeCAD UI/UX Experiment</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #222;
+    background: #f7f9fc;
+  }
+  header {
+    background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
+    color: #fff;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+  header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  header p { font-size: 1.2rem; opacity: 0.95; }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+    color: #007acc;
+    border-bottom: 2px solid #007acc;
+    padding-bottom: 0.3rem;
+  }
+  h3 { font-size: 1.2rem; margin: 1.5rem 0 0.5rem; color: #333; }
+  p { margin: 0.8rem 0; }
+  ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+  li { margin: 0.4rem 0; }
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .card h3 { border: none; margin-top: 0; color: #007acc; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .feature {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .feature h4 { margin-bottom: 0.5rem; color: #007acc; font-size: 1rem; }
+  .feature p { font-size: 0.95rem; color: #444; margin: 0.3rem 0; }
+  code {
+    background: #eef2f7;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+  }
+  pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  .badge {
+    display: inline-block;
+    background: #e2e8f0;
+    color: #007acc;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-right: 0.4rem;
+  }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 3rem;
+  }
+  .author { font-style: italic; color: #888; margin-top: 1rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { text-align: left; padding: 0.75rem; border: 1px solid #ddd; }
+  th { background: #f1f5f9; color: #007acc; }
+  .license {
+    background: #fff8e1;
+    border-left: 4px solid #ffa000;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>FreeCAD UI/UX Experiment</h1>
+  <p>Laboratório de experimentos de interface para o FreeCAD</p>
+</header>
+
+<div class="container">
+
+  <section>
+    <h2>Sobre o projeto</h2>
+    <div class="card">
+      <p>Este repositório testa se o <strong>FreeCAD</strong> é viável para customizar a interface (esconder docks, aplicar QSS, menu contextual rápido, gerenciar docks, editar estilos ao vivo) e, se der certo, enviar melhorias para a comunidade.</p>
+      <p class="author">por Dionatley R V — português nativo. "God And Odin Bless us!"</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>O que está neste repositório</h2>
+    <div class="grid">
+      <div class="feature">
+        <h4>ui_lab_probe.py</h4>
+        <p>Script de "laboratório" de UI dentro do FreeCAD: lista docks, aplica layout/QSS, menu rápido (Ctrl+Shift+Space) e restaura o estado original. <strong>Nunca é modificado.</strong></p>
+      </div>
+      <div class="feature">
+        <h4>ui_lab_app.py</h4>
+        <p><strong>Aplicação real de UI/UX</strong> (não só teste): janela com abas de Docks, QSS/Estilo e Info/Controle, log integrado, ícone programático e configuração persistente.</p>
+      </div>
+      <div class="feature">
+        <h4>window_test.py</h4>
+        <p>Janela simples com botão de teste, compatível com o FreeCAD (dentro ou fora).</p>
+      </div>
+      <div class="feature">
+        <h4>tests/</h4>
+        <p>Testes automatizados com pytest (mínimo, não ocupa muito espaço em disco).</p>
+      </div>
+      <div class="feature">
+        <h4>run.sh</h4>
+        <p>Script de execução para sincronizar dependências, rodar testes e executar o app.</p>
+      </div>
+      <div class="feature">
+        <h4>Dockerfile</h4>
+        <p>Container mínimo (podman/docker) para rodar os testes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Instalação rápida</h2>
+    <div class="card">
+      <pre><code>cd /home/dionarley/codes-area/Freecad_UI_UX_Experiment
+uv sync                 # dependências de dev (pytest)
+uv sync --extra window  # + PySide6 (app e testes de janela)
+uv run pytest -q        # rodar testes
+./run.sh app            # executar o app real (standalone)</code></pre>
+      <p>O projeto usa <code>uv</code> para dependências e <code>mise</code> para fixar o Python 3.11.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Como usar (dentro do FreeCAD)</h2>
+    <div class="card">
+      <h3>1. ui_lab_probe.py</h3>
+      <pre><code>from ui_lab_probe import get_lab
+lab = get_lab()
+for item in lab.list_docks():
+    print(item)
+lab.apply_layout_and_qss()   # esconde docks + aplica QSS
+lab.open_quick_menu()        # menu contextual (Ctrl+Shift+Space)
+lab.restore()                # desfaz tudo</code></pre>
+
+      <h3>2. ui_lab_app.py (aplicação real)</h3>
+      <pre><code>from ui_lab_app import run_in_freecad
+win = run_in_freecad()</code></pre>
+      <p>Oferece três abas: <strong>Docks</strong> (mostrar/esconder docks), <strong>QSS / Estilo</strong> (editor ao vivo) e <strong>Info / Controle</strong> (recalcular documento, Fit All).</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Modo standalone (fora do FreeCAD)</h2>
+    <div class="card">
+      <pre><code>uv sync --extra window
+uv run python ui_lab_app.py</code></pre>
+      <p>Cria uma janela independente para desenvolver e testar a interface sem precisar do FreeCAD instalado.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Testes</h2>
+    <div class="card">
+      <pre><code>uv run pytest -q</code></pre>
+      <p>Saída esperada (sem PySide6): <code>3 passed in 0.01s</code>.<br>
+      Saída esperada (com PySide6 + libGL): todos os testes passam.</p>
+      <table>
+        <tr><th>Arquivo</th><th>O que testa</th></tr>
+        <tr><td>tests/test_ui_lab.py</td><td>mínimo: importa ui_lab_probe.py sem FreeCAD</td></tr>
+        <tr><td>tests/test_window_quick.py</td><td>janela/dock: QMainWindow, QDockWidget, QSS</td></tr>
+        <tr><td>tests/test_app.py</td><td>app real: janela, abas, log, editor QSS</td></tr>
+        <tr><td>tests/test_dependencies.py</td><td>verifica importação dos módulos com PySide</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Arquitetura (fontes do FreeCAD)</h2>
+    <div class="card">
+      <p>O projeto foi modelado em partes do <a href="https://github.com/FreeCAD/FreeCAD" target="_blank" rel="noopener">FreeCAD/FreeCAD</a>:</p>
+      <table>
+        <tr><th>Fonte</th><th>O que foi extraído</th></tr>
+        <tr><td><code>src/Gui/DockWindow.h</code></td><td>classe base de dock (<code>QWidget</code> + <code>BaseView</code>)</td></tr>
+        <tr><td><code>src/Gui/DockWindowManager.h</code></td><td>singleton gerenciando <code>QDockWidget</code></td></tr>
+        <tr><td><code>src/Gui/Stylesheets/</code></td><td>padrões QSS para docks, menus, botões</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div class="license">
+    <h3>Licença</h3>
+    <p>Todo o conteúdo está sob <strong>Creative Commons Attribution 4.0 International (CC BY 4.0)</strong>. Você é livre para compartilhar e adaptar, mesmo comercialmente, desde que dê crédito a <strong>Dionatley R V</strong>, forneça link para a licença e indique alterações. Veja o arquivo <code>LICENSE</code>.</p>
+  </div>
+
+  <div class="footer">
+    <p>FreeCAD UI/UX Experiment — <strong>CC BY 4.0</strong></p>
+    <div class="author">Dionatley R V · português nativo · "God And Odin Bless us!"</div>
+  </div>
+
+</div>
+
+</body>
+</html>
